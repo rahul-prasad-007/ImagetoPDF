@@ -4,10 +4,8 @@ import { motion } from 'framer-motion'
 import { Upload, FolderOpen } from 'lucide-react'
 import toast from 'react-hot-toast'
 
-const FORMAT_LABELS = ['PNG', 'JPEG', 'WEBP', 'BMP', 'TIFF']
-
 /**
- * Large drag-and-drop upload card with browse support and format hints.
+ * Drag-and-drop upload — Shankar Card dark panel style.
  */
 function UploadCard({ acceptedTypes, onSelect, disabled = false }) {
   const onDrop = useCallback(
@@ -20,17 +18,14 @@ function UploadCard({ acceptedTypes, onSelect, disabled = false }) {
   const onDropRejected = useCallback((fileRejections) => {
     const error = fileRejections[0]?.errors?.[0]
     if (!error) return
-
     if (error.code === 'file-too-large') {
       toast.error('File is too large. Maximum size is 20 MB.')
       return
     }
-
     if (error.code === 'file-invalid-type') {
       toast.error('Unsupported format. Use PNG, JPEG, WEBP, BMP, or TIFF.')
       return
     }
-
     toast.error(error.message || 'Unable to upload this file.')
   }, [])
 
@@ -46,10 +41,10 @@ function UploadCard({ acceptedTypes, onSelect, disabled = false }) {
 
   return (
     <motion.section
-      initial={{ opacity: 0, y: 24 }}
+      initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ delay: 0.15, duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-      className="rounded-2xl border border-border bg-card p-5 sm:p-8 shadow-[0_4px_24px_rgba(15,23,42,0.06)]"
+      transition={{ delay: 0.12, duration: 0.45 }}
+      className="rounded-2xl border border-border bg-panel p-4 sm:p-6"
     >
       <div
         {...getRootProps()}
@@ -62,66 +57,40 @@ function UploadCard({ acceptedTypes, onSelect, disabled = false }) {
             open()
           }
         }}
-        aria-label="Upload image by drag and drop or browse"
+        aria-label="Upload image"
         className={`
-          relative group cursor-pointer rounded-xl border-2 border-dashed
-          transition-all duration-300 ease-out
-          px-4 py-10 sm:py-14 text-center
+          relative cursor-pointer rounded-xl border-2 border-dashed
+          transition-all duration-300 px-4 py-12 sm:py-16 text-center
           ${
             isDragActive
-              ? 'border-primary bg-primary/5 scale-[1.01]'
-              : 'border-border hover:border-secondary hover:bg-slate-50/80'
+              ? 'border-accent bg-accent/10 scale-[1.01]'
+              : 'border-border hover:border-accent/50 hover:bg-panel-2/80'
           }
-          ${disabled ? 'pointer-events-none opacity-60' : ''}
+          ${disabled ? 'pointer-events-none opacity-50' : ''}
         `}
       >
         <input {...getInputProps()} />
 
-        <div
-          className={`
-            pointer-events-none absolute inset-0 rounded-xl
-            ring-0 ring-primary/0 transition-all duration-300
-            group-hover:ring-4 group-hover:ring-primary/10
-            ${isDragActive ? 'ring-4 ring-primary/20' : ''}
-          `}
-        />
-
         <motion.div
           animate={isDragActive ? { scale: 1.08, y: -4 } : { scale: 1, y: 0 }}
-          transition={{ type: 'spring', stiffness: 320, damping: 22 }}
-          className="mx-auto mb-5 flex h-16 w-16 items-center justify-center rounded-2xl bg-primary/10 text-primary"
+          className="mx-auto mb-5 flex h-16 w-16 items-center justify-center rounded-2xl bg-accent/15 text-accent ring-1 ring-accent/30"
         >
           <Upload className="h-7 w-7" strokeWidth={1.75} />
         </motion.div>
 
-        <p className="font-display text-lg sm:text-xl font-semibold text-text">
-          {isDragActive ? 'Drop your image here' : 'Drag & drop your image here'}
+        <p className="font-display text-lg sm:text-xl font-semibold text-white">
+          {isDragActive ? 'Drop your image here' : 'Drag & drop your image'}
         </p>
-        <p className="mt-1.5 text-sm text-slate-500">or click anywhere to browse</p>
+        <p className="mt-1.5 text-sm text-muted">or browse from your device</p>
 
-        {/* Visual CTA only — whole zone is clickable; avoid nested <button> */}
-        <span className="mt-6 inline-flex items-center gap-2 rounded-xl bg-primary px-5 py-2.5 text-sm font-semibold text-white shadow-md shadow-primary/25 pointer-events-none select-none">
+        <span className="mt-6 inline-flex items-center gap-2 rounded-xl bg-accent px-5 py-2.5 text-sm font-semibold text-white shadow-md shadow-accent/25 pointer-events-none select-none">
           <FolderOpen className="h-4 w-4" />
           Browse Files
         </span>
 
-        <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-6 text-xs sm:text-sm text-slate-500">
-          <div className="flex flex-wrap items-center justify-center gap-1.5">
-            <span className="font-medium text-slate-600">Supported:</span>
-            {FORMAT_LABELS.map((label) => (
-              <span
-                key={label}
-                className="rounded-md border border-border bg-white px-2 py-0.5 font-medium text-slate-600"
-              >
-                {label}
-              </span>
-            ))}
-          </div>
-          <span className="hidden sm:inline text-border">|</span>
-          <p>
-            Max size: <span className="font-semibold text-slate-700">20 MB</span>
-          </p>
-        </div>
+        <p className="mt-6 text-xs text-muted">
+          PNG, JPEG, WEBP, BMP, TIFF · Max 20 MB
+        </p>
       </div>
     </motion.section>
   )
