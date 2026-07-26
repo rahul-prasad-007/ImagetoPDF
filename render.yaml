@@ -1,0 +1,18 @@
+# Render Blueprint — https://render.com/docs/blueprint-spec
+services:
+  - type: web
+    name: imagetopdf
+    runtime: docker
+    plan: starter
+    healthCheckPath: /health
+    envVars:
+      - key: OCR_LANG
+        value: auto
+      - key: USE_PP_STRUCTURE
+        value: "false"
+      - key: HYBRID_UNDERLAYS
+        value: "true"
+      - key: CORS_ORIGINS
+        value: "*"
+      - key: STATIC_DIR
+        value: /app/static
