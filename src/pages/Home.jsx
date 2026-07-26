@@ -153,13 +153,13 @@ function Home() {
           whileHover={hasImage && !busy ? { scale: 1.01 } : undefined}
           whileTap={hasImage && !busy ? { scale: 0.985 } : undefined}
           className={`
-            w-full rounded-2xl px-6 py-4
-            font-semibold text-base sm:text-lg
+            w-full rounded-xl px-6 py-4
+            font-display font-semibold text-base sm:text-lg
             flex items-center justify-center gap-2.5
             transition-all duration-300
             ${
               hasImage && !busy
-                ? 'bg-accent text-white shadow-lg shadow-accent/30 hover:bg-secondary cursor-pointer'
+                ? 'bg-accent text-white shadow-md shadow-accent/25 hover:bg-secondary cursor-pointer'
                 : 'bg-panel-2 text-muted cursor-not-allowed border border-border'
             }
           `}

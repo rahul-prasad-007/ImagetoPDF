@@ -4,9 +4,6 @@ import { motion } from 'framer-motion'
 import { Upload, FolderOpen } from 'lucide-react'
 import toast from 'react-hot-toast'
 
-/**
- * Drag-and-drop upload — Shankar Card dark panel style.
- */
 function UploadCard({ acceptedTypes, onSelect, disabled = false }) {
   const onDrop = useCallback(
     (acceptedFiles) => {
@@ -41,10 +38,9 @@ function UploadCard({ acceptedTypes, onSelect, disabled = false }) {
 
   return (
     <motion.section
-      initial={{ opacity: 0, y: 20 }}
+      initial={{ opacity: 0, y: 16 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ delay: 0.12, duration: 0.45 }}
-      className="rounded-2xl border border-border bg-panel p-4 sm:p-6"
+      className="rounded-xl border border-border bg-panel p-4 sm:p-5 shadow-sm shadow-slate-900/5"
     >
       <div
         {...getRootProps()}
@@ -59,38 +55,35 @@ function UploadCard({ acceptedTypes, onSelect, disabled = false }) {
         }}
         aria-label="Upload image"
         className={`
-          relative cursor-pointer rounded-xl border-2 border-dashed
-          transition-all duration-300 px-4 py-12 sm:py-16 text-center
+          relative cursor-pointer rounded-lg border-2 border-dashed
+          transition-all duration-300 px-4 py-10 sm:py-12 text-left sm:text-center
           ${
             isDragActive
-              ? 'border-accent bg-accent/10 scale-[1.01]'
-              : 'border-border hover:border-accent/50 hover:bg-panel-2/80'
+              ? 'border-accent bg-accent-soft scale-[1.01]'
+              : 'border-border hover:border-accent/40 hover:bg-panel-2'
           }
           ${disabled ? 'pointer-events-none opacity-50' : ''}
         `}
       >
         <input {...getInputProps()} />
 
-        <motion.div
-          animate={isDragActive ? { scale: 1.08, y: -4 } : { scale: 1, y: 0 }}
-          className="mx-auto mb-5 flex h-16 w-16 items-center justify-center rounded-2xl bg-accent/15 text-accent ring-1 ring-accent/30"
-        >
-          <Upload className="h-7 w-7" strokeWidth={1.75} />
-        </motion.div>
+        <div className="flex flex-col sm:items-center gap-4 sm:gap-5">
+          <div className="flex h-14 w-14 items-center justify-center rounded-lg bg-accent-soft text-accent">
+            <Upload className="h-6 w-6" strokeWidth={1.85} />
+          </div>
 
-        <p className="font-display text-lg sm:text-xl font-semibold text-white">
-          {isDragActive ? 'Drop your image here' : 'Drag & drop your image'}
-        </p>
-        <p className="mt-1.5 text-sm text-muted">or browse from your device</p>
+          <div>
+            <p className="font-display text-lg font-semibold text-ink sm:text-xl">
+              {isDragActive ? 'Drop your image here' : 'Drop an image to convert'}
+            </p>
+            <p className="mt-1 text-sm text-muted">PNG, JPEG, WEBP, BMP, TIFF · Max 20 MB</p>
+          </div>
 
-        <span className="mt-6 inline-flex items-center gap-2 rounded-xl bg-accent px-5 py-2.5 text-sm font-semibold text-white shadow-md shadow-accent/25 pointer-events-none select-none">
-          <FolderOpen className="h-4 w-4" />
-          Browse Files
-        </span>
-
-        <p className="mt-6 text-xs text-muted">
-          PNG, JPEG, WEBP, BMP, TIFF · Max 20 MB
-        </p>
+          <span className="inline-flex w-fit items-center gap-2 rounded-lg bg-accent px-5 py-2.5 text-sm font-semibold text-white shadow-sm shadow-accent/25 pointer-events-none select-none">
+            <FolderOpen className="h-4 w-4" />
+            Browse files
+          </span>
+        </div>
       </div>
     </motion.section>
   )

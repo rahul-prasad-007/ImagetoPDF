@@ -1,7 +1,6 @@
 import { motion } from 'framer-motion'
 import { Check, Loader2 } from 'lucide-react'
 
-/** User-facing stages mapped from internal pipeline step ids (1–9). */
 const STAGES = [
   { id: 1, label: 'Upload' },
   { id: 2, label: 'Analyze' },
@@ -10,7 +9,6 @@ const STAGES = [
 ]
 
 function stageStatus(stageId, completedSteps, activeStep) {
-  const stage = STAGES.find((s) => s.id === stageId)
   const active =
     (stageId === 1 && activeStep === 1) ||
     (stageId === 2 && activeStep >= 2 && activeStep <= 7) ||
@@ -27,19 +25,19 @@ function stageStatus(stageId, completedSteps, activeStep) {
   return 'upcoming'
 }
 
-/**
- * Compact progress for end users (internal 9-step pipeline unchanged).
- */
 function ProgressTracker({ completedSteps = 0, activeStep = 0 }) {
   if (completedSteps === 0 && activeStep === 0) return null
 
   return (
     <motion.section
-      initial={{ opacity: 0, y: 16 }}
+      initial={{ opacity: 0, y: 12 }}
       animate={{ opacity: 1, y: 0 }}
-      className="rounded-2xl border border-border bg-panel px-4 py-5 sm:px-6"
+      className="rounded-xl border border-border bg-panel px-3 py-4 sm:px-5 shadow-sm shadow-slate-900/5"
     >
-      <ol className="flex items-center justify-between gap-2">
+      <p className="mb-3 text-left text-[11px] font-bold uppercase tracking-[0.16em] text-muted">
+        Progress
+      </p>
+      <ol className="flex items-center justify-between gap-1">
         {STAGES.map((stage, index) => {
           const status = stageStatus(stage.id, completedSteps, activeStep)
           return (
@@ -57,21 +55,21 @@ function ProgressTracker({ completedSteps = 0, activeStep = 0 }) {
                 )}
                 <div
                   className={`
-                    relative z-10 flex h-9 w-9 shrink-0 items-center justify-center rounded-full
-                    border-2 text-xs font-bold
+                    relative z-10 flex h-8 w-8 shrink-0 items-center justify-center rounded-md
+                    border text-xs font-bold
                     ${
                       status === 'complete'
-                        ? 'border-success bg-success text-ink'
+                        ? 'border-success bg-success text-white'
                         : status === 'active'
-                          ? 'border-accent bg-accent text-white shadow-md shadow-accent/30'
+                          ? 'border-accent bg-accent text-white'
                           : 'border-border bg-panel-2 text-muted'
                     }
                   `}
                 >
                   {status === 'complete' ? (
-                    <Check className="h-4 w-4" strokeWidth={2.5} />
+                    <Check className="h-3.5 w-3.5" strokeWidth={2.5} />
                   ) : status === 'active' ? (
-                    <Loader2 className="h-4 w-4 animate-spin" />
+                    <Loader2 className="h-3.5 w-3.5 animate-spin" />
                   ) : (
                     stage.id
                   )}
@@ -86,8 +84,8 @@ function ProgressTracker({ completedSteps = 0, activeStep = 0 }) {
                 )}
               </div>
               <span
-                className={`text-[11px] font-semibold sm:text-xs ${
-                  status === 'upcoming' ? 'text-muted' : 'text-white'
+                className={`text-[10px] font-semibold sm:text-[11px] ${
+                  status === 'upcoming' ? 'text-muted' : 'text-ink'
                 }`}
               >
                 {stage.label}

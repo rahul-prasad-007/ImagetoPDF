@@ -1,6 +1,3 @@
-/**
- * Result area — download + preview only (pipeline stats hidden from end users).
- */
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Download, Eye, FileCheck2, Loader2, Sparkles } from 'lucide-react'
@@ -13,7 +10,6 @@ function ResultCard({
   isOptimizing = false,
 }) {
   const [showPreview, setShowPreview] = useState(true)
-  const hasOpt = Boolean(optimizeResult?.success)
   const hasPdf = Boolean(
     (optimizeResult?.download_url || pdfResult?.download_url) &&
       (optimizeResult?.success || pdfResult?.success),
@@ -26,74 +22,73 @@ function ResultCard({
 
   return (
     <motion.section
-      initial={{ opacity: 0, y: 20 }}
+      initial={{ opacity: 0, y: 16 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
-      className="rounded-2xl border border-border bg-panel p-6 sm:p-8"
+      className="rounded-xl border border-border bg-panel p-5 sm:p-7 shadow-sm shadow-slate-900/5 text-left"
     >
-      <div className="text-center">
+      <div className="flex flex-col sm:flex-row sm:items-start gap-4">
         <div
-          className={`mx-auto mb-5 flex h-16 w-16 items-center justify-center rounded-2xl ${
-            busy ? 'bg-accent/15 ring-1 ring-accent/30' : 'bg-success-soft ring-1 ring-success/30'
+          className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-lg ${
+            busy ? 'bg-accent-soft text-accent' : 'bg-success-soft text-success'
           }`}
         >
           {busy ? (
-            <Loader2 className="h-8 w-8 text-accent animate-spin" strokeWidth={1.75} />
+            <Loader2 className="h-6 w-6 animate-spin" strokeWidth={1.85} />
           ) : (
-            <FileCheck2 className="h-8 w-8 text-success" strokeWidth={1.75} />
+            <FileCheck2 className="h-6 w-6" strokeWidth={1.85} />
           )}
         </div>
 
-        {isOptimizing ? (
-          <>
-            <h2 className="font-display text-xl font-semibold text-white">Polishing your PDF…</h2>
-            <p className="mt-2 text-sm text-muted">Matching layout and quality to your image.</p>
-          </>
-        ) : isRendering ? (
-          <>
-            <h2 className="font-display text-xl font-semibold text-white">Building editable PDF…</h2>
-            <p className="mt-2 text-sm text-muted">Rebuilding text and shapes — almost there.</p>
-          </>
-        ) : hasPdf ? (
-          <>
-            <h2 className="font-display text-xl font-semibold text-white sm:text-2xl">
-              Your PDF is ready
-            </h2>
-            <p className="mt-2 mx-auto max-w-md text-sm text-muted leading-relaxed">
-              Download and open in CorelDRAW, Illustrator, or any PDF editor.
-            </p>
-            {similarity != null && !Number.isNaN(Number(similarity)) && (
-              <p className="mt-3 inline-flex items-center gap-1.5 rounded-full border border-accent/25 bg-accent/10 px-3 py-1 text-xs font-semibold text-accent">
-                <Sparkles className="h-3 w-3" />
-                Match quality {Number(similarity).toFixed(0)}%
+        <div className="flex-1 min-w-0">
+          {isOptimizing ? (
+            <>
+              <h2 className="font-display text-lg font-semibold text-ink">Polishing your PDF…</h2>
+              <p className="mt-1 text-sm text-muted">Matching layout and quality to your image.</p>
+            </>
+          ) : isRendering ? (
+            <>
+              <h2 className="font-display text-lg font-semibold text-ink">Building editable PDF…</h2>
+              <p className="mt-1 text-sm text-muted">Rebuilding text and shapes — almost there.</p>
+            </>
+          ) : hasPdf ? (
+            <>
+              <h2 className="font-display text-xl font-semibold text-ink">Your PDF is ready</h2>
+              <p className="mt-1 text-sm text-muted">
+                Download and open in CorelDRAW, Illustrator, or any PDF editor.
               </p>
-            )}
+              {similarity != null && !Number.isNaN(Number(similarity)) && (
+                <p className="mt-3 inline-flex items-center gap-1.5 rounded-md border border-accent/20 bg-accent-soft px-2.5 py-1 text-xs font-semibold text-accent">
+                  <Sparkles className="h-3 w-3" />
+                  Match quality {Number(similarity).toFixed(0)}%
+                </p>
+              )}
 
-            <div className="mt-6 flex flex-col sm:flex-row items-center justify-center gap-3">
-              <a
-                href={previewUrl}
-                download
-                className="inline-flex w-full sm:w-auto items-center justify-center gap-2 rounded-xl bg-accent px-7 py-3.5 text-sm font-semibold text-white shadow-lg shadow-accent/25 hover:bg-secondary transition-colors"
-              >
-                <Download className="h-4 w-4" />
-                Download PDF
-              </a>
-              <button
-                type="button"
-                onClick={() => setShowPreview((v) => !v)}
-                className="inline-flex w-full sm:w-auto items-center justify-center gap-2 rounded-xl border border-border bg-panel-2 px-7 py-3.5 text-sm font-semibold text-white hover:bg-border/40 transition-colors"
-              >
-                <Eye className="h-4 w-4 text-accent" />
-                {showPreview ? 'Hide Preview' : 'Preview'}
-              </button>
-            </div>
-          </>
-        ) : (
-          <>
-            <h2 className="font-display text-xl font-semibold text-white">Image received</h2>
-            <p className="mt-2 text-sm text-muted">Working on your editable PDF…</p>
-          </>
-        )}
+              <div className="mt-5 flex flex-col sm:flex-row gap-2.5">
+                <a
+                  href={previewUrl}
+                  download
+                  className="inline-flex items-center justify-center gap-2 rounded-lg bg-accent px-5 py-3 text-sm font-semibold text-white shadow-sm shadow-accent/20 hover:bg-secondary transition-colors"
+                >
+                  <Download className="h-4 w-4" />
+                  Download PDF
+                </a>
+                <button
+                  type="button"
+                  onClick={() => setShowPreview((v) => !v)}
+                  className="inline-flex items-center justify-center gap-2 rounded-lg border border-border bg-panel-2 px-5 py-3 text-sm font-semibold text-ink hover:bg-surface transition-colors"
+                >
+                  <Eye className="h-4 w-4 text-accent" />
+                  {showPreview ? 'Hide Preview' : 'Preview'}
+                </button>
+              </div>
+            </>
+          ) : (
+            <>
+              <h2 className="font-display text-lg font-semibold text-ink">Image received</h2>
+              <p className="mt-1 text-sm text-muted">Working on your editable PDF…</p>
+            </>
+          )}
+        </div>
       </div>
 
       <AnimatePresence>
@@ -102,9 +97,9 @@ function ResultCard({
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
-            className="mt-8 overflow-hidden"
+            className="mt-6 overflow-hidden"
           >
-            <div className="rounded-xl border border-border overflow-hidden bg-ink">
+            <div className="rounded-lg border border-border overflow-hidden bg-surface">
               <iframe
                 title="PDF Preview"
                 src={previewUrl}
